@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "gateway-service/server.js", "use": "@vercel/node" },
+    { "src": "auth-service/server.js", "use": "@vercel/node" },
+    { "src": "ranking-service/server.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/auth/(.*)", "dest": "auth-service/server.js" },
+    { "src": "/api/ranking/(.*)", "dest": "ranking-service/server.js" },
+    { "src": "/api/gateway/(.*)", "dest": "gateway-service/server.js" },
+    { "src": "/(.*)", "dest": "gateway-service/server.js" }
+  ]
+}
