@@ -9,6 +9,10 @@
     { "src": "/api/auth/(.*)", "dest": "auth-service/server.js" },
     { "src": "/api/ranking/(.*)", "dest": "ranking-service/server.js" },
     { "src": "/api/gateway/(.*)", "dest": "gateway-service/server.js" },
+    { "src": "/admin-panel", "dest": "gateway-service/server.js" },
+    { "src": "/admin-login", "dest": "gateway-service/server.js" },
+    { "src": "/utthan", "dest": "gateway-service/server.js" },
+    { "src": "/data-collection-form", "dest": "gateway-service/server.js" },
     { "src": "/(.*)", "dest": "gateway-service/server.js" }
   ]
 }

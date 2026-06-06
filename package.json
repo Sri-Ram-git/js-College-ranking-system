@@ -1,0 +1,13 @@
+{
+  "name": "college-ranking-system-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "gateway-service",
+    "auth-service",
+    "ranking-service"
+  ],
+  "scripts": {
+    "build": "echo 'Root build complete'"
+  }
+}

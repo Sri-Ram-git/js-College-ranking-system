@@ -4,7 +4,7 @@ const cors = require('cors');
 const College = require('./models/College');
 const { calculateScore, updateSystemRanks } = require('./utils/rankEngine');
 const { sendApprovalEmail } = require('./utils/emailService');
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config(); // ✅ Vercel injects variables directly into process.env anyway!
 
 const app = express();
 app.use(cors());
