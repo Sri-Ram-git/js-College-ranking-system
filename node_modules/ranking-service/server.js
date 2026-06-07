@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post('/api/ranking/submit', async (req, res) => {
+app.post('/api/ranking/evaluate', async (req, res) => {
   try {
     const record = new College({ ...req.body, status: 'pending' });
     await record.save();
@@ -53,7 +53,43 @@ app.get('/api/ranking/leaderboard', async (req, res) => {
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/collegeDB')
   .then(() => {
     console.log('Ranking Microservice connected to Database.');
-    
+
+    // 🔄 ADD THIS STATUS ENDPOINT INSIDE YOUR ranking-service/server.js ABOVE THE LISTEN BLOCK:
+
+    app.get('/api/ranking/status', async (req, res) => {
+      try {
+        const { email } = req.query;
+        if (!email) {
+          return res.status(400).json({ success: false, message: "Email query parameter required." });
+        }
+
+        // Search the MongoDB 'colleges' collection for a matching record
+        const college = await College.findOne({ email: email.trim() });
+
+        // Scenario 1: No institutional entity found in the cluster
+        if (!college) {
+          return res.json({ success: false });
+        }
+
+        // Scenario 2: Record exists but hasn't passed the administrative audit yet
+        if (college.status === 'pending') {
+          return res.json({ success: true, status: 'pending' });
+        }
+
+        // Scenario 3: Approved and ranked successfully
+        return res.json({
+          success: true,
+          status: 'approved',
+          score: college.score || 0,
+          rank: college.rank || "N/A"
+        });
+
+      } catch (err) {
+        console.error("❌ Tracking query fault:", err.message);
+        res.status(500).json({ success: false, error: err.message });
+      }
+    });
+
     // Only listen on a port if running locally in development mode
     if (process.env.NODE_ENV !== 'production') {
       const PORT = process.env.RANKING_PORT || 5002;
